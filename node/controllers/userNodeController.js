@@ -11,21 +11,15 @@ exports.login = function(req,res){
         
         user.findOne({email:req.body.username}).
         exec(function(err,user){
-            
+
             console.log(err);
         if(!user){
-            res.status(404).json({msg: 'user not found'});
+            res.status(500).json({msg: 'user not found'});
         }else 
             if(user.hashed_password === hashPW(req.body.pass.toString())){
-                req.session.regenerate(function(){
-                req.session.user=user.id;
-                req.session.username=user.email;
-                req.session.firstName=user.first_name;
-                req.session.lastName=user.last_name;
                 res.json(user);
-           }); 
         }else{
-           res.status(404).json({msg:'user or pass'});
+           res.status(500).json({msg:'user or pass'});
         }   
         
         });
@@ -35,17 +29,17 @@ exports.register = function(req, res){
     
     var newUser= new user();
     
-    newUser.set('email','test2');
-    newUser.set('hashed_password',hashPW('test'));
-    newUser.set('first_name','test');
-    newUser.set('last_name','test');
+    newUser.set('email',req.body.email);
+    newUser.set('hashed_password',hashPW(req.body.password));
+    newUser.set('firstName',req.body.firstName);
+    newUser.set('lastName',req.body.lastName);
    
     newUser.save(function(err){
         if(err){
-        res.status(500).json({err});
+            res.status(500).json({err});
         }
         else{
-        res.status(200).json({success:'User Inserted successfuly!'});
+            res.status(200).json({success:'User Inserted successfuly!'});
         }
     });
 }
@@ -58,4 +52,14 @@ exports.getAllUsers=function(req,res){
             res.status(200).json(users);
         }
     });
+}
+
+exports.getById=function(req,res){
+    user.findOne({_id:req.body._id}).exec(function(err,user){
+        if(err){
+            res.status(500).json({err})
+        }else{
+            res.status(200).json(user)
+        }
+    })
 }
