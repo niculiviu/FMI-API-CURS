@@ -30,9 +30,6 @@
     "type": "git",
     "url": "https://github.com/niculiviu/FMI-API-CURS.git"
   },
-  "engines": {
-    "node": "0.12.x"
-  },
   "author": "Liviu Nicu Alexandru",
   "license": "ISC",
   "bugs": {
