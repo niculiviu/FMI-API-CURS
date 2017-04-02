@@ -3,10 +3,10 @@ var mongoose =require('mongoose');
 var category=mongoose.model('categories');
 
 exports.add=function(req,res){
-    if(req.body.userId && req.body.name){
+    if(req.body.addedBy && req.body.name){
         var newCategory=new category();
         newCategory.set('name',req.body.name);
-        newCategory.set('addedBy',req.body.userId);
+        newCategory.set('addedBy',req.body.addedBy);
 
         newCategory.save(function(err,cat){
             if(err){
@@ -16,13 +16,13 @@ exports.add=function(req,res){
             }
         })
     }else{
-        res.status(500).json({err:'userId and category name are required',modelExpected:{userId:'',name:''}})
+        res.status(500).json({err:'userId and category name are required',modelExpected:{addedBy:'',name:''}})
     }  
 }
 
 exports.getAll=function(req,res){
-    if(req.body.userId){
-    category.find({addedBy:req.body.userId}).exec(function(err,categories){
+    if(req.body._id){
+    category.find({addedBy:req.body._id}).exec(function(err,categories){
         if(err){
             res.status(500).json({err})
         }else{
@@ -30,7 +30,7 @@ exports.getAll=function(req,res){
         }
     })}
     else{
-        res.status(500).json({err:'userId is required',modelExpected:{userId:''}})
+        res.status(500).json({err:'userId is required',modelExpected:{_id:''}})
     }
 }
 
@@ -75,7 +75,7 @@ exports.update=function(req,res){
 
 exports.getById=function(req,res){
     if(req.body._id){
-        category.findOne({_id:req.body.id}).exec(function(err,singleCategory){
+        category.findOne({_id:req.body._id}).exec(function(err,singleCategory){
             if(err){
                 res.status(500).json({err})
             }else{
