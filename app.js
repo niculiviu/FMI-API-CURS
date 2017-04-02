@@ -27,6 +27,7 @@ app.use(busboy());
 	app.set('view engine','html');
     app.use('/node-modules', express.static(__dirname +'/node-modules'));
 	app.use('/img/', express.static('./img/'));
+    app.use('/', express.static('./'));
     var conn=mongoose.connect('mongodb://liviu:liviu@fmi-shard-00-00-petdf.mongodb.net:27017,fmi-shard-00-01-petdf.mongodb.net:27017,fmi-shard-00-02-petdf.mongodb.net:27017/fmi?ssl=true&replicaSet=FMI-shard-0&authSource=admin');
     app.use(helmet.noSniff());
     app.use(bodyParser.urlencoded({extended: true}));
