@@ -17,14 +17,7 @@ var mongoose = require('mongoose');
 
 require('./node/models/user.js');
 require('./node/models/task.js');
-//CORS middleware
-var allowCrossDomain = function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
 
-    next();
-}
 var bson = require('bson');
 var app = express();
 app.use(busboy());
@@ -37,7 +30,25 @@ app.use(busboy());
     app.use('/', express.static('./'));
     var conn=mongoose.connect('mongodb://liviu:liviu@fmi-shard-00-00-petdf.mongodb.net:27017,fmi-shard-00-01-petdf.mongodb.net:27017,fmi-shard-00-02-petdf.mongodb.net:27017/fmi?ssl=true&replicaSet=FMI-shard-0&authSource=admin');
     app.use(helmet.noSniff());
-    app.use(allowCrossDomain);
+    // Add headers
+app.use(function (req, res, next) {
+
+    // Website you wish to allow to connect
+    res.setHeader('Access-Control-Allow-Origin', '*');
+
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the API (e.g. in case you use sessions)
+    res.setHeader('Access-Control-Allow-Credentials', true);
+
+    // Pass to next layer of middleware
+    next();
+});
     app.use(bodyParser.urlencoded({extended: true}));
     app.use(bodyParser.json());
     app.use(cookieParser());
