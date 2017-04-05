@@ -17,7 +17,14 @@ var mongoose = require('mongoose');
 
 require('./node/models/user.js');
 require('./node/models/task.js');
+//CORS middleware
+var allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
 
+    next();
+}
 var bson = require('bson');
 var app = express();
 app.use(busboy());
@@ -30,6 +37,7 @@ app.use(busboy());
     app.use('/', express.static('./'));
     var conn=mongoose.connect('mongodb://liviu:liviu@fmi-shard-00-00-petdf.mongodb.net:27017,fmi-shard-00-01-petdf.mongodb.net:27017,fmi-shard-00-02-petdf.mongodb.net:27017/fmi?ssl=true&replicaSet=FMI-shard-0&authSource=admin');
     app.use(helmet.noSniff());
+    app.use(allowCrossDomain);
     app.use(bodyParser.urlencoded({extended: true}));
     app.use(bodyParser.json());
     app.use(cookieParser());
